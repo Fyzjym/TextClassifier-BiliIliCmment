@@ -1,0 +1,48 @@
+sql操作记录
+
+
+1. 设置A表的Pid自增，从1开始，也可以接where条件排序
+
+'''
+SELECT @rowNO :=0;
+UPDATE A SET pid=(@rowNO := @rowNo+1);
+'''
+
+SELECT @rowNO :=0;
+UPDATE BiliComment_NoRepeat SET keyOrder = (@rowNO := @rowNo+1);
+建立一个递增的主键
+
+
+
+2. 当是做爬虫懒，就没做重复录入的检测。。
+
+insert into BiliComment_NoRepeat
+
+SELECT DISTINCT * 
+FROM BiliComment
+ORDER BY ctime;
+
+根据所有字段产生不重复的数据集，根据ctime排序，并将最终结果插入到建好的无重复数据集BiliComment_NoRepeat结构中。
+
+就可以得到没有重复的数据集啦！
+
+3. 更新数据 ，更新是update，跟之前的insert into 有区别
+
+UPDATE BiliComment_NoRepeat 
+SET text_confidence ='1.3456789', text_pos_score='2.1234567' ,text_neg_score = '0.12312403'
+WHERE keyOrder='1';
+
+
+4. 列赋值
+
+update BiliComment_NoRepeat set message__='。';
+
+5. 两列合并为一列显示
+
+select concat(message,message__) as message
+FROM BiliComment_NoRepeat;
+
+5. 两列合并为一列
+
+UPDATE BiliComment_NoRepeat
+SET message= concat(message,message__);
